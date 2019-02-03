@@ -1,0 +1,63 @@
+version: 1.0.{build}
+# Fix line endings in Windows. (runs before repo cloning)
+init:
+  - git config --global core.autocrlf input
+environment:
+  COVERALLS_REPO_TOKEN: 9RRu36GLfbnk5Ri6Y6FpoZU10CW6dlIfy
+  COVERALLS_SERVICE_NAME: appveyor
+  COVERALLS_GIT_COMMIT: $(APPVEYOR_REPO_COMMIT)
+  COVERALLS_GIT_BRANCH : $(APPVEYOR_REPO_BRANCH)
+  COVERALLS_SERVICE_JOB_ID  : $(APPVEYOR_BUILD_ID)
+  COVERALLS_SERVICE_PULL_REQUEST : $(APPVEYOR_PULL_REQUEST_NUMBER)
+  access_token:
+    secure: dHfUgllfTEAqpcoz3iQj8TO0DGh8n90Coqf0+IXT0bIRNSIxGTDu991X+FStY613
+  npmrc_token:
+    secure: vqGk4eUIvg1ngzdW4WE2hlq1U7YupunkayeCh7bXy8M=
+
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Decrypt .npmrc.enc file for publishing purposes if not pull request build and not scheduled build
+  # Lerna needs to have a npmrc for each package folder as it does not use the root npmrc https://github.com/lerna/lerna/issues/296#issuecomment-261080345
+  - ps: >-
+      if($env:APPVEYOR_REPO_BRANCH -ne 'master'){
+        ./ci/publish/decrypt-npmrc.ps1
+        ./ci/publish/copy-npmrc.ps1
+      }
+      if(!$env:APPVEYOR_SCHEDULED_BUILD -and !$env:appveyor_pull_request_number -and $env:APPVEYOR_REPO_BRANCH -eq 'master') {
+        ./ci/publish/decrypt-npmrc.ps1
+        ./ci/publish/copy-npmrc.ps1
+      }
+  - ps: Install-Product node 4
+  - npm -g install npm@3
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm cache clean
+  - npm install -g gulp
+  - npm install
+  - ps: ./ci/buildScripts/build.ps1
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - npm test
+  - ps: ./test/uploadResults.ps1
+  - gulp coveralls
+
+
+# Don't run MS build step
+build: off
+
+on_success:
+# If it is not a scheduled build/pr build and the current branch is master publish a new package.
+# If it is not build on master publish npm tag.
+  - npm run beforepublish
+  - ps: >-
+      if(!$env:APPVEYOR_SCHEDULED_BUILD -and !$env:appveyor_pull_request_number -and $env:APPVEYOR_REPO_BRANCH -eq 'master') {
+        ./ci/publish/publishMaster.ps1
+      }
+      if ($env:APPVEYOR_REPO_BRANCH -ne 'master') {
+        ./ci/publish/publishBranch.ps1
+      }
