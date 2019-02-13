@@ -33,7 +33,7 @@ function submitToCoveralls(fileName, callback) {
       "remotes": [
       {
         "name": "origin",
-        "url": "git@github.com:adazzle/react-data-grid.git"
+        "url": "git@github.com/bassam2003/react_grids.git"
       }
       ]
     }
