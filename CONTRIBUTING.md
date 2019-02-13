@@ -1,4 +1,4 @@
-Use [Github issues](https://github.com/adazzle/react-data-grid/issues) for feature requests and bug reports.
+Use [Github issues](https://github.com/bassam2003/react_grids/issues) for feature requests and bug reports.
 
 ## <a name="question"></a> Got a Question or Problem?
 
@@ -6,12 +6,12 @@ If you have questions about how to *use* react-data-grid, please direct them to 
 
 ## <a name="issue"></a> Found an Issue?
 If you find a bug in the source code or a mistake in the documentation, you can help us by
-[submitting an issue](#submit-issue) to our [GitHub Repository](https://github.com/adazzle/react-data-grid). Even better, you can
+[submitting an issue](#submit-issue) to our [GitHub Repository](https://github.com/bassam2003/react_grids). Even better, you can
 [submit a Pull Request](#submit-pr) with a fix.
 
 ## <a name="feature"></a> Want a Feature?
 You can *request* a new feature by submitting an issue to our [GitHub
-Repository](https://github.com/adazzle/react-data-grid). If you would like to *implement* a new feature, please submit an issue with
+Repository](https://github.com/bassam2003/react_grids). If you would like to *implement* a new feature, please submit an issue with
 a proposal for your work first, to be sure that we can use it. 
 Please consider what kind of change it is:
 
@@ -28,7 +28,7 @@ We want anyone contributing to react-data-grid to have the best experience possi
 You can start coding in 5 minutes.
 
 ```sh
-git clone https://github.com/adazzle/react-data-grid.git
+git clone https://github.com/bassam2003/react_grids.git
 cd react-data-grid
 npm install
 npm run dev-server
